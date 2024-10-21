@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ShijiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.shiji_name as shijiName
+        ,a.shiji_uuid_number as shijiUuidNumber
+        ,a.shiji_photo as shijiPhoto
+        ,a.shiji_guige as shijiGuige
+        ,a.shiji_changjia as shijiChangjia
+        ,a.shiji_pici as shijiPici
+        ,a.shiji_time as shijiTime
+        ,a.shiji_baozhi as shijiBaozhi
+        ,a.shiji_types as shijiTypes
+        ,a.shiji_kucun_number as shijiKucunNumber
+        ,a.shiji_content as shijiContent
+        ,a.shiji_delete as shijiDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ShijiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM shiji  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.shijiName != '' and params.shijiName != null and params.shijiName != 'null' ">
+                and a.shiji_name like CONCAT('%',#{params.shijiName},'%')
+            </if>
+            <if test=" params.shijiUuidNumber != '' and params.shijiUuidNumber != null and params.shijiUuidNumber != 'null' ">
+                and a.shiji_uuid_number like CONCAT('%',#{params.shijiUuidNumber},'%')
+            </if>
+            <if test=" params.shijiGuige != '' and params.shijiGuige != null and params.shijiGuige != 'null' ">
+                and a.shiji_guige like CONCAT('%',#{params.shijiGuige},'%')
+            </if>
+            <if test=" params.shijiChangjia != '' and params.shijiChangjia != null and params.shijiChangjia != 'null' ">
+                and a.shiji_changjia like CONCAT('%',#{params.shijiChangjia},'%')
+            </if>
+            <if test="params.shijiPiciStart != null and params.shijiPiciStart != ''">
+                <![CDATA[  and a.shiji_pici >= #{params.shijiPiciStart}   ]]>
+            </if>
+            <if test="params.shijiPiciEnd != null and params.shijiPiciEnd != ''">
+                <![CDATA[  and a.shiji_pici <= #{params.shijiPiciEnd}   ]]>
+            </if>
+             <if test="params.shijiPici != null and params.shijiPici != ''">
+                and a.shiji_pici = #{params.shijiPici}
+             </if>
+            <if test=" params.shijiTimeStart != '' and params.shijiTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.shiji_time) >= UNIX_TIMESTAMP(#{params.shijiTimeStart}) ]]>
+            </if>
+            <if test=" params.shijiTimeEnd != '' and params.shijiTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.shiji_time) <= UNIX_TIMESTAMP(#{params.shijiTimeEnd}) ]]>
+            </if>
+            <if test="params.shijiTime != null and params.shijiTime != ''">
+                and a.shiji_time = #{params.shijiTime}
+            </if>
+            <if test="params.shijiBaozhiStart != null and params.shijiBaozhiStart != ''">
+                <![CDATA[  and a.shiji_baozhi >= #{params.shijiBaozhiStart}   ]]>
+            </if>
+            <if test="params.shijiBaozhiEnd != null and params.shijiBaozhiEnd != ''">
+                <![CDATA[  and a.shiji_baozhi <= #{params.shijiBaozhiEnd}   ]]>
+            </if>
+             <if test="params.shijiBaozhi != null and params.shijiBaozhi != ''">
+                and a.shiji_baozhi = #{params.shijiBaozhi}
+             </if>
+            <if test="params.shijiTypes != null and params.shijiTypes != ''">
+                and a.shiji_types = #{params.shijiTypes}
+            </if>
+            <if test="params.shijiKucunNumberStart != null and params.shijiKucunNumberStart != ''">
+                <![CDATA[  and a.shiji_kucun_number >= #{params.shijiKucunNumberStart}   ]]>
+            </if>
+            <if test="params.shijiKucunNumberEnd != null and params.shijiKucunNumberEnd != ''">
+                <![CDATA[  and a.shiji_kucun_number <= #{params.shijiKucunNumberEnd}   ]]>
+            </if>
+             <if test="params.shijiKucunNumber != null and params.shijiKucunNumber != ''">
+                and a.shiji_kucun_number = #{params.shijiKucunNumber}
+             </if>
+            <if test=" params.shijiContent != '' and params.shijiContent != null and params.shijiContent != 'null' ">
+                and a.shiji_content like CONCAT('%',#{params.shijiContent},'%')
+            </if>
+            <if test="params.shijiDeleteStart != null and params.shijiDeleteStart != ''">
+                <![CDATA[  and a.shiji_delete >= #{params.shijiDeleteStart}   ]]>
+            </if>
+            <if test="params.shijiDeleteEnd != null and params.shijiDeleteEnd != ''">
+                <![CDATA[  and a.shiji_delete <= #{params.shijiDeleteEnd}   ]]>
+            </if>
+             <if test="params.shijiDelete != null and params.shijiDelete != ''">
+                and a.shiji_delete = #{params.shijiDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>

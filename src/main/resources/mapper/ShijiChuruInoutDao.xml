@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ShijiChuruInoutDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.shiji_churu_inout_uuid_number as shijiChuruInoutUuidNumber
+        ,a.shiji_churu_inout_name as shijiChuruInoutName
+        ,a.shiji_churu_inout_types as shijiChuruInoutTypes
+        ,a.shiji_churu_inout_content as shijiChuruInoutContent
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ShijiChuruInoutView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM shiji_churu_inout  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.shijiChuruInoutUuidNumber != '' and params.shijiChuruInoutUuidNumber != null and params.shijiChuruInoutUuidNumber != 'null' ">
+                and a.shiji_churu_inout_uuid_number like CONCAT('%',#{params.shijiChuruInoutUuidNumber},'%')
+            </if>
+            <if test=" params.shijiChuruInoutName != '' and params.shijiChuruInoutName != null and params.shijiChuruInoutName != 'null' ">
+                and a.shiji_churu_inout_name like CONCAT('%',#{params.shijiChuruInoutName},'%')
+            </if>
+            <if test="params.shijiChuruInoutTypes != null and params.shijiChuruInoutTypes != ''">
+                and a.shiji_churu_inout_types = #{params.shijiChuruInoutTypes}
+            </if>
+            <if test=" params.shijiChuruInoutContent != '' and params.shijiChuruInoutContent != null and params.shijiChuruInoutContent != 'null' ">
+                and a.shiji_churu_inout_content like CONCAT('%',#{params.shijiChuruInoutContent},'%')
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
